@@ -50,6 +50,19 @@ async function update(userId: number, roomId: number, bookingId: number) {
   return bookingRepository.update(userId, roomId, bookingId);
 }
 
+async function validateBookingByUserId(userId: number) {
+  const userHaveBooking = await bookingRepository.findBookingByUserId(userId);
+
+  if (!userHaveBooking) {
+    throw notFoundError();
+  }
+
+  return {
+    id: userHaveBooking.id,
+    Room: userHaveBooking.Room,
+  };
+}
+
 export type CreateBookingParams = Pick<Booking, "roomId">;
 
 const bookingService = {
@@ -58,6 +71,7 @@ const bookingService = {
   validateUserHasBooking,
   validateIfBookingBelongsUser,
   update,
+  validateBookingByUserId,
 };
 
 export default bookingService;

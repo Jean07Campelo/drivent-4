@@ -22,6 +22,9 @@ async function findBookingByUserId(userId: number) {
     where: {
       userId,
     },
+    include: {
+      Room: true,
+    },
   });
 }
 
@@ -29,8 +32,8 @@ async function checkBookingByUser(userId: number, bookingId: number) {
   return prisma.booking.findFirst({
     where: {
       userId,
-      id: bookingId
-    }
+      id: bookingId,
+    },
   });
 }
 
@@ -42,7 +45,7 @@ async function update(userId: number, roomId: number, bookingId: number) {
     data: {
       userId,
       roomId,
-    }
+    },
   });
 }
 
