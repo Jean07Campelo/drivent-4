@@ -8,6 +8,7 @@ async function findRoomById(roomId: number) {
   if (!roomIdExists) {
     throw notFoundError();
   }
+  return roomIdExists;
 }
 
 async function checkRoomAvailable(roomId: number) {
@@ -17,8 +18,6 @@ async function checkRoomAvailable(roomId: number) {
   if (occupation === capacity) {
     throw cannotCreateBookingError();
   }
-
-  return occupation;
 }
 
 const roomService = {

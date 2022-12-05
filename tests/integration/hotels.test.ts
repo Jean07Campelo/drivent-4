@@ -195,7 +195,6 @@ describe("GET /hotels/:hotelId", () => {
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       const payment = await createPayment(ticket.id, ticketType.price);
 
-      //TODO factory
       const createdHotel = await createHotel();
 
       const createdRoom = await createRoomWithHotelId(createdHotel.id);

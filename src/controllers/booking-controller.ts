@@ -11,14 +11,43 @@ export async function createBooking(req: AuthenticatedRequest, res: Response) {
   try {
     await bookingService.checkTicket(userId);
 
-    const roomIdExists = await roomService.findRoomById(roomId);
+    await roomService.findRoomById(roomId);
 
     await bookingService.validateUserHasBooking(userId);
+
     await roomService.checkRoomAvailable(roomId);
 
     const newBooking = await bookingService.createBooking(userId, roomId);
 
     return res.status(httpStatus.OK).send({ bookingId: newBooking.id });
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+
+    if (error.name === "CannotCreateBookingError") {
+      return res.sendStatus(httpStatus.FORBIDDEN);
+    }
+
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
+
+export async function upsertBooking(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const roomId = Number(req.body.roomId);
+  const bookingId = Number(req.params.bookingId);
+
+  try {
+    const roomIdExists = await roomService.findRoomById(roomId);
+
+    await bookingService.validateIfBookingBelongsUser(userId, bookingId);
+
+    await roomService.checkRoomAvailable(roomId);
+
+    const bookingUpdate = await bookingService.update(userId, roomId, bookingId);
+
+    res.status(httpStatus.OK).send({ bookingId: bookingUpdate.id });
   } catch (error) {
     if (error.name === "NotFoundError") {
       return res.sendStatus(httpStatus.NOT_FOUND);

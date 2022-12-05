@@ -31,11 +31,23 @@ async function createBooking(userId: number, roomId: number) {
 async function validateUserHasBooking(userId: number) {
   const userHaveBooking = await bookingRepository.findBookingByUserId(userId);
 
-  if (userHaveBooking === 1) {
-    return cannotCreateBookingError();
+  if (userHaveBooking) {
+    throw cannotCreateBookingError();
   }
 
   return userHaveBooking;
+}
+
+async function validateIfBookingBelongsUser(userId: number, bookingId: number) {
+  const bookingBelongsUser = await bookingRepository.checkBookingByUser(userId, bookingId);
+
+  if (!bookingBelongsUser) {
+    throw cannotCreateBookingError();
+  }
+}
+
+async function update(userId: number, roomId: number, bookingId: number) {
+  return bookingRepository.update(userId, roomId, bookingId);
 }
 
 export type CreateBookingParams = Pick<Booking, "roomId">;
@@ -44,6 +56,8 @@ const bookingService = {
   checkTicket,
   createBooking,
   validateUserHasBooking,
+  validateIfBookingBelongsUser,
+  update,
 };
 
 export default bookingService;
