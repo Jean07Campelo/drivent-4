@@ -367,9 +367,18 @@ describe("GET /booking", () => {
 
       const response = await server.get("/booking").set("Authorization", `Bearer ${token}`);
 
-      console.log(response.body);
       expect(response.status).toEqual(httpStatus.OK);
-      //expect(response.body).toEqual({ bookingId: expect.any(Number) });
+      expect(response.body).toEqual({
+        id: createdBooking.id,
+        Room: {
+          id: createdRoom.id,
+          name: createdRoom.name,
+          capacity: createdRoom.capacity,
+          hotelId: createdRoom.hotelId,
+          createdAt: createdRoom.createdAt.toISOString(),
+          updatedAt: createdRoom.updatedAt.toISOString(),
+        },
+      });
     });
   });
 });

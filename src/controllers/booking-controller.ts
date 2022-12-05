@@ -15,7 +15,6 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === "NotFoundError") {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
-    return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
 
@@ -71,7 +70,5 @@ export async function upsertBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === "CannotCreateBookingError") {
       return res.sendStatus(httpStatus.FORBIDDEN);
     }
-
-    return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
